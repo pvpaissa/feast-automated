@@ -4,48 +4,66 @@ namespace Cleanse\Feast\Classes;
 
 use Cleanse\Feast\Classes\Scheduler\LodestoneChecker;
 use Cleanse\Feast\Classes\Scheduler\FinalizeSeason;
+use Cleanse\Feast\Classes\Scheduler\UpdateRankings;
 
+/**
+ * i. Check result page of current season
+ * ii. if a result page, update final results and then advance the season.
+ * iii. if no result page, update the daily standings
+ * iv. If no season, do nothing.
+ */
 class Scheduler
 {
-    /**
-     * @param $mode
-     * @param $season
-     * @return bool
-     *
-     * Check result page of current season before the daily update
-     * if no result page, update the daily standings
-     * if a result page, update final results and then advance the season.
-     * If no season, do nothing.
-     */
-    public function checkLodestone($mode, $season)
+    public $mode;
+    public $season;
+
+    public function __construct($mode, $season)
     {
-        //Check results page of current season
-        $checker = new LodestoneChecker($mode, $season);
+        $this->mode = $mode;
+        $this->season = $season;
+    }
+
+    public function checkLodestone()
+    {
+        //i. Check results page of current season
+        $checker = new LodestoneChecker($this->mode, $this->season);
         $check = $checker->checkResults();
 
-        //*Update final standings
-        //if there is a response of '200' (true)
-        //queue up the final standings and advance the season #
+        /**
+         * ii. If there was a results page:
+         */
         if ($check) {
             $finalize = new FinalizeSeason;
 
-            return $finalize->complete($mode, $season);
+            return $finalize->complete($this->mode, $this->season);
         }
 
-        return false;
-
-        //No results yet = queue jobs for a new day**
-        //return $this->checkStandingsPage();
+        /**
+         * Else check the daily standings:
+         */
+        return $this->checkStandingsPage();
     }
 
-    /** queue jobs for a new day */
-//    private function checkStandingsPage()
-//    {
-//        return $this->crawlLodestoneResults();
-//    }
-//
-//    public function calculateRankings($mode, $season)
-//    {
-//        return $this->calculateDatabaseData($mode, $season);
-//    }
+    /**
+     * Check standings page of current season
+     */
+    private function checkStandingsPage()
+    {
+        $checker = new LodestoneChecker($this->mode, $this->season, false);
+        $check = $checker->checkResults();
+
+        /**
+         * iii. If there are current standings:
+         */
+        if ($check) {
+            $daily = new UpdateRankings($this->mode, $this->season);
+
+            $daily->update();
+
+            return true;
+        }
+
+        //iv. Do nothing between seasons.
+        return false;
+    }
 }

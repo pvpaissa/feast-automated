@@ -8,6 +8,7 @@ class LodestoneChecker
 {
     public $mode;
     public $season;
+    public $result;
 
     private $url;
 
@@ -15,11 +16,13 @@ class LodestoneChecker
      * LodestoneChecker constructor.
      * @param integer $season
      * @param string  $mode
+     * @param bool    $result
      */
-    public function __construct($mode, $season)
+    public function __construct($mode, $season, $result = true)
     {
         $this->season = $season;
         $this->mode   = $mode;
+        $this->result = $result;
     }
 
     /**
@@ -41,16 +44,25 @@ class LodestoneChecker
      */
     private function guzzleResults()
     {
-        if ($this->mode === 'party') {
-            $this->url = 'https://na.finalfantasyxiv.com/lodestone/ranking/thefeast/team/result/'.$this->season.'/';
-        } else {
-            $this->url = 'https://na.finalfantasyxiv.com/lodestone/ranking/thefeast/result/'.$this->season.'/';
-        }
+        $this->getUrl();
 
         $client = new GuzzleClient;
 
         $response = $client->get($this->url, ['exceptions' => false]);
 
         return $response->getStatusCode();
+    }
+
+    private function getUrl()
+    {
+        if ($this->result) {
+            if ($this->mode === 'party') {
+                $this->url = 'https://na.finalfantasyxiv.com/lodestone/ranking/thefeast/team/result/'.$this->season.'/';
+            } else {
+                $this->url = 'https://na.finalfantasyxiv.com/lodestone/ranking/thefeast/result/'.$this->season.'/';
+            }
+        } else {
+            $this->url = 'https://na.finalfantasyxiv.com/lodestone/ranking/thefeast/';
+        }
     }
 }
