@@ -1,0 +1,5 @@
+1.0.1: First version of Feast
+1.0.2:
+  - !!! Update with a migration and seed
+  - create_feast_settings_table.php
+  - seed_feast_settings_table.php
