@@ -2,31 +2,81 @@
 
 namespace Cleanse\Feast\Classes\Scheduler;
 
+use Cleanse\Feast\Classes\FeastHelper;
 use Cleanse\Feast\Models\FeastSettings;
 
 class FinalizeSeason
 {
+    public $mode;
+    public $season;
+
+    public function __construct($mode, $season)
+    {
+        $this->mode = $mode;
+        $this->season = $season;
+    }
+
     //Queue up the final standings
-    public function complete($mode, $season)
+    public function complete()
     {
-        $this->queueUpResults($mode, $season);
+        $this->queueUpResults();
 
-        $this->progressSeason($mode, $season);
+        $this->progressSeason();
 
         return true;
     }
 
-    private function queueUpResults($mode, $season)
+    private function queueUpResults()
     {
-        return true;
+        if ($this->mode === 'party') {
+            $this->finalizeParty();
+        } else {
+            $this->finalizeSolo();
+        }
     }
 
-    private function progressSeason($mode, $season)
+    private function progressSeason()
     {
-        $advanceSeason = $season + 1;
+        $advanceSeason = $this->season + 1;
 
-        $update = FeastSettings::where(['mode' => $mode])->first();
+        $update = FeastSettings::where(['mode' => $this->mode])->first();
         $update->season = $advanceSeason;
         $update->save();
+    }
+
+    private function finalizeSolo()
+    {
+        $feast = new FeastHelper;
+
+        $day = $feast->yearDay();
+        $dcs = $feast->datacenters;
+
+        foreach ($dcs as $dc) {
+            $data = [
+                'datacenter' => $dc,
+                'day'        => $day,
+                'season'     => $this->season
+            ];
+
+            Queue::push('\Cleanse\Feast\Classes\Jobs\QueueSoloUpdate', $data);
+        }
+    }
+
+    private function finalizeParty()
+    {
+        $feast = new FeastHelper;
+
+        $day = $feast->yearDay();
+        $dcs = $feast->datacenters;
+
+        foreach ($dcs as $dc) {
+            $data = [
+                'datacenter' => $dc,
+                'day'        => $day,
+                'season'     => $this->season
+            ];
+
+            Queue::push('\Cleanse\Feast\Classes\Jobs\QueuePartyUpdate', $data);
+        }
     }
 }

@@ -33,9 +33,9 @@ class Scheduler
          * ii. If there was a results page:
          */
         if ($check) {
-            $finalize = new FinalizeSeason;
+            $finalize = new FinalizeSeason($this->mode, $this->season);
 
-            return $finalize->complete($this->mode, $this->season);
+            return $finalize->complete();
         }
 
         /**
