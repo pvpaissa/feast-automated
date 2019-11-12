@@ -7,7 +7,7 @@ use DateTime;
 use System\Classes\PluginBase;
 
 use Cleanse\Feast\Classes\Scheduler;
-use Cleanse\Feast\Classes\FeastSearchProvider;
+use Cleanse\Feast\Models\Party;
 
 class Plugin extends PluginBase
 {
@@ -24,14 +24,38 @@ class Plugin extends PluginBase
     public function registerComponents()
     {
         return [
-            'Cleanse\Feast\Components\Demo' => 'cleanseFeastDemo',
+            'Cleanse\Feast\Components\Solo'         => 'cleanseFeastSolo',
+            'Cleanse\Feast\Components\Party'        => 'cleanseFeastParty',
+            'Cleanse\Feast\Components\Profile'      => 'cleanseFeastProfile',
+            'Cleanse\Feast\Components\Install'      => 'cleanseFeastInstall',
+            'Cleanse\Feast\Components\PartyList'    => 'cleanseFeastPartyList',
+            'Cleanse\Feast\Components\PartyProfile' => 'cleanseFeastPartyProfile'
         ];
     }
 
     public function boot()
     {
-        Event::listen('offline.sitesearch.extend', function ($query) {
-            return [new FeastSearchProvider('solo'), new FeastSearchProvider('party')];
+        Event::listen('offline.sitesearch.query', function ($query) {
+
+            $items = Party::where('name', 'like', "%${query}%")
+                ->get();
+
+            $results = $items->map(function ($item) use ($query) {
+
+                $relevance = mb_stripos($item->name, $query) !== false ? 2 : 1;
+
+                return [
+                    'title' => $item->name,
+                    'text' => $item->dc_group,
+                    'url' => '/light-party/profile/' . $item->lodestone,
+                    'relevance' => $relevance,
+                ];
+            });
+
+            return [
+                'provider' => 'Feast',
+                'results' => $results,
+            ];
         });
     }
 
