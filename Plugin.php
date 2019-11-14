@@ -27,9 +27,8 @@ class Plugin extends PluginBase
             'Cleanse\Feast\Components\Solo'         => 'cleanseFeastSolo',
             'Cleanse\Feast\Components\Party'        => 'cleanseFeastParty',
             'Cleanse\Feast\Components\Profile'      => 'cleanseFeastProfile',
-            'Cleanse\Feast\Components\Install'      => 'cleanseFeastInstall',
             'Cleanse\Feast\Components\PartyList'    => 'cleanseFeastPartyList',
-            'Cleanse\Feast\Components\PartyProfile' => 'cleanseFeastPartyProfile'
+            'Cleanse\Feast\Components\PartyProfile' => 'cleanseFeastPartyProfile',
         ];
     }
 
