@@ -11,12 +11,14 @@ class SeedFeastSettingsTable extends Seeder
     {
         $solo = FeastSettings::create([
             'mode'   => 'solo',
-            'season' => 1
+            'season' => 1,
+            'take' => 50
         ]);
 
         $party = FeastSettings::create([
             'mode'   => 'party',
-            'season' => 1
+            'season' => 1,
+            'take' => 50
         ]);
     }
 }

@@ -15,6 +15,7 @@ class CreateFeastSettingsTable extends Migration
             $table->increments('id');
             $table->string('mode');
             $table->integer('season')->default(1);
+            $table->integer('take')->default(50);
             $table->timestamps();
         });
     }
