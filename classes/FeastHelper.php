@@ -21,4 +21,12 @@ class FeastHelper
     {
         return date("Yz");
     }
+
+    public function classifyString($string)
+    {
+        $classify = str_replace('-', ' ', $string);
+        $classify = ucwords($classify);
+
+        return str_replace(' ', '', $classify);
+    }
 }
