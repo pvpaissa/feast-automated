@@ -6,7 +6,7 @@ use Queue;
 
 use Cleanse\PvPaissa\Classes\UpdateOrCreatePlayer;
 use Cleanse\PvPaissa\Classes\HelperRankSort;
-use Cleanse\Feast\Classes\FeastCrawler;
+use Cleanse\Feast\Classes\Solo\SoloCrawler;
 use Cleanse\Feast\Models\FeastSolo;
 use Cleanse\Feast\Models\FeastSoloDaily;
 
@@ -14,7 +14,7 @@ class SoloRankingsUpdate
 {
     public function updateDay($data)
     {
-        $list = new FeastCrawler($data['season'], $data['type'], $data['datacenter'], $data['tier'], $data['day']);
+        $list = new SoloCrawler($data['season'], $data['datacenter'], $data['tier'], $data['day']);
 
         $players = $list->crawl();
 
@@ -51,8 +51,8 @@ class SoloRankingsUpdate
         }
 
         $typeSeason = ['season' => $data['season'], 'type' => 'solo'];
-        Queue::push('\Cleanse\Feast\Classes\Jobs\FeastOutdated', $typeSeason);
-        Queue::push('\Cleanse\Feast\Classes\Jobs\RankFeastSeason', $typeSeason);
+        Queue::push('\Cleanse\Feast\Classes\Jobs\QueueOutdatedRankings', $typeSeason);
+        Queue::push('\Cleanse\Feast\Classes\Jobs\QueueSeasonalRankings', $typeSeason);
     }
 
     public function seasonPlayerSort($data)

@@ -49,9 +49,9 @@ class PartyRankingsUpdate
                 });
         }
 
-        $typeSeason = ['season' => $data['season'], 'type' => 'lp'];
-        Queue::push('\Cleanse\Feast\Classes\Jobs\FeastOutdated', $typeSeason); //todo: rename values?
-        Queue::push('\Cleanse\Feast\Classes\Jobs\RankFeastSeason', $typeSeason);
+        $typeSeason = ['season' => $data['season'], 'type' => 'party'];
+        Queue::push('\Cleanse\Feast\Classes\Jobs\QueueOutdatedRankings', $typeSeason);
+        Queue::push('\Cleanse\Feast\Classes\Jobs\QueueSeasonalRankings', $typeSeason);
     }
 
     public function seasonPartySort($data)

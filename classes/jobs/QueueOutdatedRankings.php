@@ -18,11 +18,6 @@ class QueueOutdatedRankings
             $fix->updateLightParty($data);
         }
 
-        if ($data['type'] == 'legacy-party') {
-            $fix = new OutdatedRankings;
-            $fix->updateLegacyParty($data);
-        }
-
         $job->delete();
     }
 }
