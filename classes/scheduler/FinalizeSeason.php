@@ -89,8 +89,6 @@ class FinalizeSeason
         ];
 
         Queue::push('\Cleanse\Feast\Classes\Jobs\QueueDailyRankings', $data);
-
-        return true;
     }
 
     private function progressSeason()
