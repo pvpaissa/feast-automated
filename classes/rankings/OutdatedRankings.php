@@ -10,8 +10,7 @@ use Cleanse\Feast\Models\Party;
 
 class OutdatedRankings
 {
-    public $soloOffset = 8675309;
-    public $partyOffset = 8675309;
+    public $outdatedOffset = 8675309;
 
     public function updateSolo($data)
     {
@@ -25,7 +24,7 @@ class OutdatedRankings
         foreach ($oldPlayers as $player) {
             $player->old = 1;
             $player->change = '0';
-            $player->rank = $this->soloOffset;
+            $player->rank = $this->outdatedOffset;
 
             $player->save();
         }
@@ -42,7 +41,7 @@ class OutdatedRankings
 
         foreach ($oldParties as $party) {
             $party->old = 1;
-            $party->rank = $this->partyOffset;
+            $party->rank = $this->outdatedOffset;
 
             $party->save();
         }
@@ -60,7 +59,7 @@ class OutdatedRankings
         foreach ($oldPlayers as $player) {
             $player->old = 1;
             $player->change = '0';
-            $player->rank = $this->partyOffset;
+            $player->rank = $this->outdatedOffset;
 
             $player->save();
         }
