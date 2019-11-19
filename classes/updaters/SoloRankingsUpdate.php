@@ -14,7 +14,7 @@ class SoloRankingsUpdate
 {
     public function updateDay($data)
     {
-        $list = new SoloCrawler($data['season'], $data['datacenter'], $data['tier'], $data['day']);
+        $list = new SoloCrawler($data['season'], $data['datacenter'], $data['tier'], $data['day'], $data['result']);
 
         $players = $list->crawl();
 

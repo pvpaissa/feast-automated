@@ -60,7 +60,8 @@ class FinalizeSeason
                     'datacenter' => $dc,
                     'day' => $this->day,
                     'tier' => $tier,
-                    'season' => $this->season
+                    'season' => $this->season,
+                    'result' => true
                 ];
 
                 Queue::push('\Cleanse\Feast\Classes\Jobs\QueueSoloDaily', $data);
@@ -74,7 +75,8 @@ class FinalizeSeason
             $data = [
                 'datacenter' => $dc,
                 'day' => $this->day,
-                'season' => $this->season
+                'season' => $this->season,
+                'result' => true
             ];
 
             Queue::push('\Cleanse\Feast\Classes\Jobs\QueuePartyDaily', $data);

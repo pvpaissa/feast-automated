@@ -14,7 +14,7 @@ class PartyRankingsUpdate
 {
     public function updateDay($data)
     {
-        $list = new PartyCrawler($data['season'], $data['datacenter'], $data['day']);
+        $list = new PartyCrawler($data['season'], $data['datacenter'], $data['day'], $data['result']);
 
         $parties = $list->crawl();
 

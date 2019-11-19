@@ -14,19 +14,28 @@ class PartyCrawler
     public $datacenter;
     public $day;
 
-    public $url;
+    private $result;
+    private $url;
 
     /**
      * PartyCrawler constructor.
      * @param integer $season
-     * @param string  $datacenter
-     * @param string  $day
+     * @param string $datacenter
+     * @param string $day
+     * @param bool $result
      */
-    public function __construct($season, $datacenter, $day)
+    public function __construct($season, $datacenter, $day, $result = false)
     {
-        $this->season     = $season;
+        $this->season = $season;
         $this->datacenter = $datacenter;
-        $this->day        = $day;
+        $this->day = $day;
+        $this->result = $result;
+
+        if ($this->result) {
+            $this->url = 'https://na.finalfantasyxiv.com/lodestone/ranking/thefeast/team/result/'.$this->season.'/';
+        } else {
+            $this->url = 'https://na.finalfantasyxiv.com/lodestone/ranking/thefeast/team';
+        }
     }
 
     public function crawl()
@@ -84,13 +93,11 @@ class PartyCrawler
 
     private function guzzle()
     {
-        $this->url = 'https://na.finalfantasyxiv.com/lodestone/ranking/thefeast/team';
-
-        $urlVars = '?dcgroup='.$this->datacenter;
+        $urlVars = '?dcgroup=' . $this->datacenter;
 
         $client = new GuzzleClient;
 
-        $res = $client->get($this->url.$urlVars);
+        $res = $client->get($this->url . $urlVars);
 
         return $res->getBody()->getContents();
     }

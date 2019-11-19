@@ -15,7 +15,8 @@ class SoloCrawler
     public $tier;
     public $day;
 
-    public $url;
+    private $result;
+    private $url;
 
     /**
      * SoloCrawler constructor.
@@ -23,16 +24,21 @@ class SoloCrawler
      * @param string $datacenter
      * @param integer $tier
      * @param string $day
+     * @param bool $result
      */
-    public function __construct($season, $datacenter, $tier, $day)
+    public function __construct($season, $datacenter, $tier, $day, $result = false)
     {
         $this->season = $season;
         $this->datacenter = $datacenter;
         $this->tier = $tier;
         $this->day = $day;
+        $this->result = $result;
 
-        //Current Solo Feast URL
-        $this->url = 'https://na.finalfantasyxiv.com/lodestone/ranking/thefeast/';
+        if ($this->result) {
+            $this->url = 'https://na.finalfantasyxiv.com/lodestone/ranking/thefeast/result/'.$this->season.'/';
+        } else {
+            $this->url = 'https://na.finalfantasyxiv.com/lodestone/ranking/thefeast/';
+        }
     }
 
     public function crawl()
