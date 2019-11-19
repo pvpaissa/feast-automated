@@ -38,7 +38,7 @@ class PartyCrawler
         //If this tier has no teams
         $teamNodes = '//*[@id="ranking"]/div[3]/div/div[2]/article/div[2]/table/tbody/tr';
         if (!$crawler->filterXPath($teamNodes)->count()) {
-            Log::info('The DOM crawler found no data for teams at ' . $this->url . ': ' . $this->datacenter . ' ' . $this->day);
+            Log::info('The DOM crawler found no data for Light Party: ' . $this->datacenter . ' ' . $this->day);
             return;
         }
 
