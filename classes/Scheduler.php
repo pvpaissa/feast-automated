@@ -3,8 +3,8 @@
 namespace Cleanse\Feast\Classes;
 
 use Cleanse\Feast\Classes\Scheduler\LodestoneChecker;
-use Cleanse\Feast\Classes\Scheduler\FinalizeSeason;
-use Cleanse\Feast\Classes\Scheduler\UpdateRankings;
+use Cleanse\Feast\Classes\Scheduler\UpdateSeason;
+use Cleanse\Feast\Models\FeastSettings;
 
 /**
  * i. Check result page of current season
@@ -14,28 +14,31 @@ use Cleanse\Feast\Classes\Scheduler\UpdateRankings;
  */
 class Scheduler
 {
-    public $mode;
-    public $season;
+    public $schedule;
 
-    public function __construct($mode, $season)
+    //Get the current season, mode, and amount.
+    public function __construct($mode)
     {
-        $this->mode = $mode;
-        $this->season = $season;
+        $this->schedule = FeastSettings::where('season', $mode)->first();
     }
 
     public function checkLodestone()
     {
-        //i. Check results page of current season
-        $checker = new LodestoneChecker($this->mode, $this->season);
+        if (!isset($this->schedule)) {
+            return false;
+        }
+
+        //i. Check "results" page of current season
+        $checker = new LodestoneChecker($this->schedule->mode, $this->schedule->season);
         $check = $checker->checkResults();
 
         /**
-         * ii. If there was a results page:
+         * ii. If there was a "results" page:
          */
         if ($check) {
-            $finalize = new FinalizeSeason($this->mode, $this->season);
+            $finalize = new UpdateSeason($this->schedule->mode, $this->schedule->season, true);
 
-            return $finalize->complete();
+            return $finalize->update();
         }
 
         /**
@@ -49,14 +52,14 @@ class Scheduler
      */
     private function checkStandingsPage()
     {
-        $checker = new LodestoneChecker($this->mode, $this->season, false);
+        $checker = new LodestoneChecker($this->schedule->mode, $this->schedule->season, false);
         $check = $checker->checkResults();
 
         /**
          * iii. If there are current standings:
          */
         if ($check) {
-            $daily = new UpdateRankings($this->mode, $this->season);
+            $daily = new UpdateSeason($this->schedule->mode, $this->schedule->season);
 
             $daily->update();
 

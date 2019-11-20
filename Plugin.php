@@ -29,6 +29,8 @@ class Plugin extends PluginBase
             'Cleanse\Feast\Components\Profile'      => 'cleanseFeastProfile',
             'Cleanse\Feast\Components\PartyList'    => 'cleanseFeastPartyList',
             'Cleanse\Feast\Components\PartyProfile' => 'cleanseFeastPartyProfile',
+
+            'Cleanse\Feast\Components\Demo' => 'cleanseFeastDemo',
         ];
     }
 
@@ -86,18 +88,8 @@ class Plugin extends PluginBase
         })->cron('3 4 * * *');
 
         $schedule->call(function () {
-            $getLP = new Scheduler('solo');
-            $getLP->calculateRankings();
-        })->cron('33 4 * * *');
-
-        $schedule->call(function () {
             $getLP = new Scheduler('party');
             $getLP->checkLodestone();
         })->cron('3 5 * * *');
-
-        $schedule->call(function () {
-            $getLP = new Scheduler('party');
-            $getLP->calculateRankings();
-        })->cron('33 5 * * *');
     }
 }

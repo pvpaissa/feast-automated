@@ -7,23 +7,24 @@ use Queue;
 use Cleanse\Feast\Classes\FeastHelper;
 use Cleanse\Feast\Models\FeastSettings;
 
-class FinalizeSeason
+class UpdateSeason
 {
     public $mode;
     public $season;
+    public $result;
 
     private $dcs;
     private $day;
     private $tiers;
 
-    public function __construct($mode, $season)
+    public function __construct($mode, $season, $result = false)
     {
         $this->mode = $mode;
         $this->season = $season;
+        $this->result = $result;
     }
 
-    //Queue up the final standings
-    public function complete()
+    public function update()
     {
         $feast = new FeastHelper;
 
@@ -31,14 +32,16 @@ class FinalizeSeason
         $this->dcs = $feast->datacenters;
         $this->tiers = $feast->tiers;
 
-        $this->queueUpFinalResults();
+        $this->queueUpResults();
 
-        $this->progressSeason();
+        if ($this->result) {
+            $this->progressSeason();
+        }
 
         return true;
     }
 
-    private function queueUpFinalResults()
+    private function queueUpResults()
     {
         if ($this->mode === 'party') {
             $this->queueParty();
@@ -46,8 +49,8 @@ class FinalizeSeason
             $this->queueSolo();
         }
 
-        //After we get the finalized data, queue up the final rankings
-        $this->queueUpFinalRankings();
+        //After we get the daily data, queue up the daily/overall rankings
+        $this->queueUpRankings();
     }
 
     private function queueSolo()
@@ -59,7 +62,7 @@ class FinalizeSeason
                     'day' => $this->day,
                     'tier' => $tier,
                     'season' => $this->season,
-                    'result' => true
+                    'result' => $this->result
                 ];
 
                 Queue::push('\Cleanse\Feast\Classes\Jobs\QueueSoloDaily', $data);
@@ -74,14 +77,14 @@ class FinalizeSeason
                 'datacenter' => $dc,
                 'day' => $this->day,
                 'season' => $this->season,
-                'result' => true
+                'result' => $this->result
             ];
 
             Queue::push('\Cleanse\Feast\Classes\Jobs\QueuePartyDaily', $data);
         }
     }
 
-    private function queueUpFinalRankings()
+    private function queueUpRankings()
     {
         $data = [
             'day' => $this->day,
