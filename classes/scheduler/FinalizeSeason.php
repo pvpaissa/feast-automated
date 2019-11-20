@@ -15,7 +15,6 @@ class FinalizeSeason
     private $dcs;
     private $day;
     private $tiers;
-    private $classify;
 
     public function __construct($mode, $season)
     {
@@ -31,7 +30,6 @@ class FinalizeSeason
         $this->day = $feast->yearDay();
         $this->dcs = $feast->datacenters;
         $this->tiers = $feast->tiers;
-        $this->classify = $feast->classifyString($this->mode);
 
         $this->queueUpFinalResults();
 
