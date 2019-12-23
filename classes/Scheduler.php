@@ -19,7 +19,7 @@ class Scheduler
     //Get the current season, mode, and amount.
     public function __construct($mode)
     {
-        $this->schedule = FeastSettings::where('season', $mode)->first();
+        $this->schedule = FeastSettings::find($mode);
     }
 
     public function checkLodestone()

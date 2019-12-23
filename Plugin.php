@@ -83,12 +83,12 @@ class Plugin extends PluginBase
     public function registerSchedule($schedule)
     {
         $schedule->call(function () {
-            $getSolo = new Scheduler('solo');
+            $getSolo = new Scheduler(1);
             $getSolo->checkLodestone();
         })->cron('3 4 * * *');
 
         $schedule->call(function () {
-            $getLP = new Scheduler('party');
+            $getLP = new Scheduler(2);
             $getLP->checkLodestone();
         })->cron('3 5 * * *');
     }
