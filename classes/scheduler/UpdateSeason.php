@@ -88,7 +88,8 @@ class UpdateSeason
     {
         $data = [
             'day' => $this->day,
-            'season' => $this->season
+            'season' => $this->season,
+            'type' => $this->mode
         ];
 
         Queue::push('\Cleanse\Feast\Classes\Jobs\QueueDailyRankings', $data);
