@@ -92,7 +92,10 @@ class UpdateSeason
             'type' => $this->mode
         ];
 
-        Queue::push('\Cleanse\Feast\Classes\Jobs\QueueDailyRankings', $data);
+        //Fix for Primal Daily Rankings.
+        $future = Carbon::now()->addMinutes(15);
+
+        Queue::later($future, '\Cleanse\Feast\Classes\Jobs\QueueDailyRankings', $data);
     }
 
     private function progressSeason()
