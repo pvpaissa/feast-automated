@@ -2,6 +2,7 @@
 
 namespace Cleanse\Feast\Classes\Scheduler;
 
+use Carbon\Carbon;
 use Queue;
 
 use Cleanse\Feast\Classes\FeastHelper;
