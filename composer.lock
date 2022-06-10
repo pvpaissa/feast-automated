@@ -130,23 +130,10 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "dev-master",
+            "version": "^7.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "df36d8dae3979cf927d5bbbed6f0427f39aadfec"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/df36d8dae3979cf927d5bbbed6f0427f39aadfec",
-                "reference": "df36d8dae3979cf927d5bbbed6f0427f39aadfec",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "guzzlehttp/promises": "^1.0",
-                "guzzlehttp/psr7": "^1.6.1",
-                "php": ">=5.5"
+                "url": "https://github.com/guzzlehttp/guzzle.git"
             },
             "require-dev": {
                 "ext-curl": "*",
